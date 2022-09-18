@@ -3,7 +3,6 @@ package by.maksimruksha.mapgeneration.service;
 import by.maksimruksha.mapgeneration.api.service.NoiseGenerator;
 
 public class NoiseGeneratorImpl implements NoiseGenerator {
-
     private long seed = 0;
 
     private static final float[][] VERTEX_VECTORS =
