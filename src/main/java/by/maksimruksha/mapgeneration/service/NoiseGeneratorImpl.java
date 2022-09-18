@@ -94,9 +94,11 @@ public class NoiseGeneratorImpl implements NoiseGenerator {
         float upDot = lerp(upLeftDot, upRightDot, localX);
 
         // final result
-        float value = lerp(downDot, upDot, localY);
+        float noise = lerp(downDot, upDot, localY);
+        // arrange noise from 0 to 1
+        noise = noise * 0.5f + 0.5f;
 
-        return value;
+        return noise;
     }
 
     // linear interpolation
