@@ -11,7 +11,7 @@ import javax.persistence.*;
 public class Like {
 
     @Id
-    private Long Id;
+    private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Owner Id")
