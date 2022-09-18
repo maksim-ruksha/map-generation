@@ -17,6 +17,10 @@ public class Comment {
     @JoinColumn(name = "Author Id")
     private User author;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Map Id")
+    private Map map;
+
     @Column(name = "Value")
     private String value;
 }
