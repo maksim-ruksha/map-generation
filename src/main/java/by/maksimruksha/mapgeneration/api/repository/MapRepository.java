@@ -10,8 +10,8 @@ import java.util.List;
 
 public interface MapRepository extends JpaRepository<Map, Long> {
 
-    @Query("SELECT map FROM Map map WHERE map.author.id =: userId")
-    List<Map> find(Long userId);
+    //@Query("SELECT map FROM Map map WHERE map.author.id =: userId")
+    Page<Map> findAllByAuthor(Pageable pageable, Long userId);
 
-    Page<Map> findAllByPublicationDateTime(Pageable pageable);
+    //Page<Map> findAll(Pageable pageable);
 }

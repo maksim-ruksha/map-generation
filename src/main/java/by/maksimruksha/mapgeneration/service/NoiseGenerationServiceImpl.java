@@ -1,9 +1,18 @@
 package by.maksimruksha.mapgeneration.service;
 
-import by.maksimruksha.mapgeneration.api.service.NoiseGenerator;
+import by.maksimruksha.mapgeneration.api.service.NoiseGenerationService;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Service;
 
+<<<<<<< HEAD:src/main/java/by/maksimruksha/mapgeneration/service/NoiseGenerationServiceImpl.java
+@Service
+public class NoiseGenerationServiceImpl implements NoiseGenerationService {
+
+=======
 public class NoiseGeneratorImpl implements NoiseGenerator {
+>>>>>>> 2d5e33a42782ebce63647d4c5e8db24e4977d06d:src/main/java/by/maksimruksha/mapgeneration/service/NoiseGeneratorImpl.java
     private long seed = 0;
+    private float scale = 1;
 
     private static final float[][] VERTEX_VECTORS =
             {
@@ -15,6 +24,10 @@ public class NoiseGeneratorImpl implements NoiseGenerator {
 
     public void setSeed(long seed) {
         this.seed = seed;
+    }
+
+    public void setScale(float scale) {
+        this.scale = scale;
     }
 
     // just get the noise
@@ -38,7 +51,7 @@ public class NoiseGeneratorImpl implements NoiseGenerator {
 
         for (int i = 0; i < octaves; i++) {
             // add octave noise
-            noise += getSimpleNoise(scaledX, scaledY);
+            noise += getSimpleNoise(scaledX, scaledY) * currentNoiseWeight;
 
             // collect weight
             totalWeight += currentNoiseWeight;
@@ -58,6 +71,10 @@ public class NoiseGeneratorImpl implements NoiseGenerator {
     }
 
     private float getSimpleNoise(float x, float y) {
+
+        // scale coords
+        x *= scale;
+        y *= scale;
 
         // calculate cell vertices coords
         int cellStartX = (int) Math.floor(x);
@@ -94,27 +111,42 @@ public class NoiseGeneratorImpl implements NoiseGenerator {
         float upDot = lerp(upLeftDot, upRightDot, localX);
 
         // final result
+<<<<<<< HEAD:src/main/java/by/maksimruksha/mapgeneration/service/NoiseGenerationServiceImpl.java
+        float value = lerp(downDot, upDot, localY);
+        value = value * 0.5f + 0.5f;
+=======
         float noise = lerp(downDot, upDot, localY);
         // arrange noise from 0 to 1
         noise = noise * 0.5f + 0.5f;
+>>>>>>> 2d5e33a42782ebce63647d4c5e8db24e4977d06d:src/main/java/by/maksimruksha/mapgeneration/service/NoiseGeneratorImpl.java
 
         return noise;
     }
 
     // linear interpolation
     private float lerp(float a, float b, float t) {
-        return a + (b - a) * t;
+        return a + (b - a) * cosine(t);
+    }
+
+    // makes noise less blocky
+    private float cosine(float t) {
+        return (float) ((1 - Math.cos(t * Math.PI)) * 0.5);
+    }
+
+    private float[] normalize(float[] v) {
+        float magnitude = (float) Math.sqrt(v[0] * v[0] + v[1] * v[1]);
+        return new float[]{v[0] / magnitude, v[1] / magnitude};
     }
 
     // dot product of two-dimensional vectors
     private float dot(float[] v1, float[] v2) {
-        return v1[0] * v1[1] + v2[0] * v2[0];
+        return v1[0] * v2[0] + v1[1] * v2[1];
     }
 
     // get random vector based on coords
     private float[] getVertexVector(int x, int y) {
         // inserting seed here makes output vectors seed-dependent
-        int vectorIndex = (int) hash((hash(x) + hash(y)) * seed) % 3;
+        int vectorIndex = (int) Math.abs(hash(hash(x) + hash(y) + hash(seed + x * y)) & 3);
         return VERTEX_VECTORS[vectorIndex];
     }
 
