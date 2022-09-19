@@ -14,6 +14,7 @@ import java.util.List;
 public class Map {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "Publication Date Time")

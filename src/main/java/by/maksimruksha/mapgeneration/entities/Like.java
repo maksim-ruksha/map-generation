@@ -8,9 +8,11 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
+@Table(name = "Likes")
 public class Like {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
