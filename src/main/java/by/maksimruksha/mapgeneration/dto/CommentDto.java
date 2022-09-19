@@ -3,9 +3,9 @@ package by.maksimruksha.mapgeneration.dto;
 import lombok.Data;
 
 @Data
-public class CommentDTO {
+public class CommentDto {
     private Long id;
-    private UserDTO author;
-    private MapDTO map;
+    private UserDto author;
+    private MapDto map;
     private String value;
 }

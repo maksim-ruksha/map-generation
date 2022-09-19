@@ -7,14 +7,14 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 @Data
-public class MapDTO {
+public class MapDto {
     private Long id;
     private ZonedDateTime publicationDateTime;
     private Long seed;
     private User author;
     private String generatorName;
-    private List<LikeDTO> likes;
-    private List<CommentDTO> comments;
+    private List<LikeDto> likes;
+    private List<CommentDto> comments;
     private String previewLink;
     private String fullLink;
 }

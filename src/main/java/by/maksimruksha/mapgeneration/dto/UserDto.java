@@ -5,10 +5,10 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class UserDTO {
+public class UserDto {
     private Long id;
     private String name;
     // private String password;
     private String role;
-    private List<MapDTO> maps;
+    private List<MapDto> maps;
 }

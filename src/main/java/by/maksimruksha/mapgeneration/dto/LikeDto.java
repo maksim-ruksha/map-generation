@@ -3,8 +3,8 @@ package by.maksimruksha.mapgeneration.dto;
 import lombok.Data;
 
 @Data
-public class LikeDTO {
+public class LikeDto {
     private Long id;
-    private UserDTO owner;
-    private MapDTO map;
+    private UserDto owner;
+    private MapDto map;
 }
