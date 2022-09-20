@@ -16,7 +16,7 @@ import java.io.ByteArrayOutputStream;
 @RequiredArgsConstructor
 @RequestMapping("/map")
 public class MapController {
-    //private final MapService mapService;
+
     private final MapGenerationService mapGenerationService;
 
     @GetMapping(
@@ -26,7 +26,7 @@ public class MapController {
     public @ResponseBody byte[] generate(@PathVariable Long seed/*, String generator*/) {
         MapDto map = new MapDto();
         map.setSeed(seed);
-        System.out.println("GOT SEED: " + seed);
+
         BufferedImage image = mapGenerationService.generate(seed);
 
         try {
