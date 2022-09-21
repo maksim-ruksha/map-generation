@@ -5,9 +5,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface UserService {
-    UserDto create(UserDto map);
-    UserDto read(Long id);
-    boolean update(UserDto map);
-    boolean delete(Long id);
+    UserDto create(UserDto userDto);
+    UserDto read(Long userId);
+    UserDto update(UserDto userDto);
+    boolean delete(Long userId);
     Page<UserDto> findAll(Pageable pageable);
+    UserDto findById(Long userId);
 }
