@@ -10,37 +10,37 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Table(name = "Maps")
+@Table(name = "maps")
 public class Map {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "Publication Date Time")
+    @Column(name = "publication_date_time")
     private ZonedDateTime publicationDateTime;
 
-    @Column(name = "Seed")
+    @Column(name = "seed")
     private Long seed;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Author Id")
+    @JoinColumn(name = "author_id")
     private User author;
 
-    @Column(name = "Generator")
+    @Column(name = "generator")
     private String generatorName;
 
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Likes Ids")
+    @JoinColumn(name = "likes_ids")
     private List<Like> likes;
 
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Comments Ids")
+    @JoinColumn(name = "comments_ids")
     private List<Comment> comments;
 
-    @Column(name = "Preview Link")
+    @Column(name = "preview_link")
     private String previewLink;
 
-    @Column(name = "Full Link")
+    @Column(name = "full_link")
     private String fullLink;
 }

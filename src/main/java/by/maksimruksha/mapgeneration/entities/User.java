@@ -9,22 +9,22 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Table(name = "Users")
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "Name")
+    @Column(name = "name")
     private String name;
 
-    @Column(name = "Password")
+    @Column(name = "password")
     private String password;
 
-    @Column(name = "Role")
+    @Column(name = "role")
     private String role;
 
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Maps Ids")
+    @JoinColumn(name = "maps_ids")
     private List<Map> maps;
 }

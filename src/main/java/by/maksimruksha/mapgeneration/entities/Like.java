@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-@Table(name = "Likes")
+@Table(name = "likes")
 public class Like {
 
     @Id
@@ -16,10 +16,10 @@ public class Like {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Owner Id")
+    @JoinColumn(name = "owner_id")
     private User owner;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Map Id")
+    @JoinColumn(name = "map_id")
     private Map map;
 }
