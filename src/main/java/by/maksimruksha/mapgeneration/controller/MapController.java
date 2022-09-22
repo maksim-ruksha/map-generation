@@ -5,6 +5,7 @@ import by.maksimruksha.mapgeneration.api.service.MapService;
 import by.maksimruksha.mapgeneration.dto.MapDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
@@ -17,6 +18,7 @@ import java.io.ByteArrayOutputStream;
 @RequestMapping("/map")
 public class MapController {
 
+    private final MapService mapService;
     private final MapGenerationService mapGenerationService;
 
     @GetMapping(
@@ -40,4 +42,22 @@ public class MapController {
         return null;
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<MapDto> read(@PathVariable Long id)
+    {
+        MapDto mapDto = mapService.read(id);
+        return ResponseEntity.ok(mapDto);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<MapDto> update(MapDto mapDto)
+    {
+        MapDto response = mapService.update(mapDto);
+        return ResponseEntity.ok(response);
+    }
+
+    /*public ResponseEntity<MapDto> like()
+    {
+
+    }*/
 }

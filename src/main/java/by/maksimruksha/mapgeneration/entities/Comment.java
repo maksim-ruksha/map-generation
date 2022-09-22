@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-@Table(name = "Comments")
+@Table(name = "comments")
 public class Comment {
 
     @Id
@@ -16,13 +16,13 @@ public class Comment {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Author Id")
+    @JoinColumn(name = "author _id")
     private User author;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Map Id")
+    @JoinColumn(name = "map_id")
     private Map map;
 
-    @Column(name = "Value")
+    @Column(name = "value")
     private String value;
 }
