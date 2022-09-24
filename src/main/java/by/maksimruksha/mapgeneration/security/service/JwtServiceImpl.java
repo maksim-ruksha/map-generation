@@ -33,20 +33,33 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
+    public String getUserName(String token) {
+        JwtParser jwtParser = getTokenParser();
+        return jwtParser.parseClaimsJws(token).getBody().getSubject();
+    }
+
+    @Override
     public Boolean isValid(String token, UserDetails userDetails) {
-        JwtParserBuilder builder = Jwts.parserBuilder().setSigningKey(secret);
+
+        JwtParser jwtParser = getTokenParser();
         try {
-            Claims claims = builder.build().parseClaimsJws(token).getBody();
+            Claims claims = jwtParser.parseClaimsJws(token).getBody();
 
             String usernameFromToken = claims.getSubject();
             Date expirationDate = claims.getExpiration();
 
-            boolean isUsernameValid = userDetails.getName().equals(usernameFromToken);
-            boolean isExpired = expirationDate.before(new Date());
+            Boolean isUsernameValid = userDetails.getName().equals(usernameFromToken);
+            Boolean isExpired = expirationDate.before(new Date());
 
             return isUsernameValid && !isExpired;
         } catch (Exception e) {
             return false;
         }
     }
+
+    private JwtParser getTokenParser()
+    {
+        return Jwts.parserBuilder().setSigningKey(secret).build();
+    }
+
 }

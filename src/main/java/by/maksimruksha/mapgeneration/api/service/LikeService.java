@@ -8,7 +8,7 @@ public interface LikeService {
     LikeDto create(LikeDto map);
     LikeDto read(Long id);
     LikeDto update(LikeDto map);
-    boolean delete(Long id);
+    Boolean delete(Long id);
     Page<LikeDto> findAll(Pageable pageable);
     Page<LikeDto> findAllByMap(Pageable pageable, Long mapId);
     Long countAllByMap(Long mapId);

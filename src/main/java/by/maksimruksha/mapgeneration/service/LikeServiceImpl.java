@@ -55,7 +55,7 @@ public class LikeServiceImpl implements LikeService {
     }
 
     @Override
-    public boolean delete(Long id) {
+    public Boolean delete(Long id) {
         if (likeRepository.existsById(id)) {
             likeRepository.deleteById(id);
             return true;

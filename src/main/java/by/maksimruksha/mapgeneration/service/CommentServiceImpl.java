@@ -55,7 +55,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public boolean delete(Long id) {
+    public Boolean delete(Long id) {
         if (commentRepository.existsById(id)) {
             commentRepository.deleteById(id);
             return true;

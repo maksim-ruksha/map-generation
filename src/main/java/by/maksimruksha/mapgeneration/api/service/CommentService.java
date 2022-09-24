@@ -8,6 +8,6 @@ public interface CommentService {
     CommentDto create(CommentDto commentDto);
     CommentDto read(Long id);
     CommentDto update(CommentDto commentDto);
-    boolean delete(Long id);
+    Boolean delete(Long id);
     Page<CommentDto> findAllByMap(Pageable pageable, Long mapId);
 }

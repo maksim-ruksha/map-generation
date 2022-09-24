@@ -51,7 +51,7 @@ public class MapServiceImpl implements MapService {
     }
 
     @Override
-    public boolean delete(Long id) {
+    public Boolean delete(Long id) {
         if (mapRepository.existsById(id)) {
             mapRepository.deleteById(id);
             return true;
