@@ -14,7 +14,6 @@ import java.util.Map;
 public class JwtServiceImpl implements JwtService {
 
     private final long JWT_TOKEN_TIME = 1 * 1000 * 60 * 60; // 1 hour
-    private final String CLAIMS_KEY_PASSWORD = "password";
 
     @Value("${jwt.secret}")
     private String secret;
@@ -24,7 +23,6 @@ public class JwtServiceImpl implements JwtService {
         Date expirationDate = new Date(System.currentTimeMillis() + JWT_TOKEN_TIME);
 
         Map<String, String> claims = new HashMap<>();
-        claims.put(CLAIMS_KEY_PASSWORD, userDetails.getPassword());
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -37,21 +35,18 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public Boolean isValid(String token, UserDetails userDetails) {
         JwtParserBuilder builder = Jwts.parserBuilder().setSigningKey(secret);
-        Claims claims = builder.build().parseClaimsJws(token).getBody();
+        try {
+            Claims claims = builder.build().parseClaimsJws(token).getBody();
 
-        if (claims.containsKey(CLAIMS_KEY_PASSWORD))
-        {
             String usernameFromToken = claims.getSubject();
-            String passwordFromToken = claims.get(CLAIMS_KEY_PASSWORD, String.class);
             Date expirationDate = claims.getExpiration();
 
             boolean isUsernameValid = userDetails.getName().equals(usernameFromToken);
-            boolean isPasswordValid = userDetails.getPassword().equals(passwordFromToken);
             boolean isExpired = expirationDate.before(new Date());
 
-            return isUsernameValid && isPasswordValid && isExpired;
+            return isUsernameValid && !isExpired;
+        } catch (Exception e) {
+            return false;
         }
-
-        return false;
     }
 }
