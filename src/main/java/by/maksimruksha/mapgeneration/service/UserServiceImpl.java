@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean delete(Long userId) {
+    public Boolean delete(Long userId) {
         if (userRepository.existsById(userId)) {
             userRepository.deleteById(userId);
             return true;
@@ -56,5 +56,16 @@ public class UserServiceImpl implements UserService {
     public UserDto findById(Long userId) {
         User response = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User " + userId + " not found."));
         return mapper.map(response, UserDto.class);
+    }
+
+    @Override
+    public UserDto findByName(String name) {
+        User response = userRepository.findUserByName(name);
+        return mapper.map(response, UserDto.class);
+    }
+
+    @Override
+    public Boolean existsUserByName(String name) {
+        return userRepository.existsUserByName(name);
     }
 }

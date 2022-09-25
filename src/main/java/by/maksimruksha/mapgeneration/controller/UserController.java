@@ -1,26 +1,53 @@
 package by.maksimruksha.mapgeneration.controller;
 
-import by.maksimruksha.mapgeneration.api.repository.UserRepository;
+import by.maksimruksha.mapgeneration.api.service.UserService;
 import by.maksimruksha.mapgeneration.dto.UserDto;
-import by.maksimruksha.mapgeneration.entities.User;
+import by.maksimruksha.mapgeneration.security.UserDetails;
+import by.maksimruksha.mapgeneration.security.api.service.JwtService;
+import by.maksimruksha.mapgeneration.security.dto.LoginDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
 
-    private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
+    private final UserService userService;
+    private final JwtService jwtService;
+
+    private final ModelMapper mapper;
 
     @PostMapping("/create")
-    public UserDto save(UserDto userDto) {
-        User user = modelMapper.map(userDto, User.class);
-        User response = userRepository.save(user);
-        return modelMapper.map(response, UserDto.class);
+    public ResponseEntity<UserDto> save(UserDto userDto) {
+        if (!userService.existsUserByName(userDto.getName())) {
+            UserDto response = userService.create(userDto);
+            return ResponseEntity.ok(response);
+        }
+        return ResponseEntity.badRequest().body(userDto);
+    }
+
+    @GetMapping("/token")
+    public String token() {
+        LoginDto loginDto = new LoginDto();
+        loginDto.setName("amogus");
+        loginDto.setPassword("mega sus");
+
+        UserDetails userDetails = mapper.map(loginDto, UserDetails.class);
+        String token = jwtService.generateToken(userDetails);
+        return token;
+    }
+
+    @GetMapping("/validateToken/{token}")
+    public String validateToken(@PathVariable String token) {
+        LoginDto loginDto = new LoginDto();
+        loginDto.setName("amogus");
+        loginDto.setPassword("mega sus");
+
+        UserDetails userDetails = mapper.map(loginDto, UserDetails.class);
+        Boolean isValid = jwtService.isValid(token, userDetails);
+        return isValid ? "Okay" : "Not okay";
     }
 }

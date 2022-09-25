@@ -25,4 +25,7 @@ public class Comment {
 
     @Column(name = "value")
     private String value;
+
+    @Column(name = "active")
+    private Boolean active;
 }
