@@ -2,12 +2,12 @@ package by.maksimruksha.mapgeneration.controller;
 
 import by.maksimruksha.mapgeneration.api.service.UserService;
 import by.maksimruksha.mapgeneration.dto.UserDto;
-import by.maksimruksha.mapgeneration.security.UserDetails;
 import by.maksimruksha.mapgeneration.security.api.service.JwtService;
 import by.maksimruksha.mapgeneration.security.dto.LoginDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

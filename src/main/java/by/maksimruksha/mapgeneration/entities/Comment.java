@@ -16,7 +16,7 @@ public class Comment {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author _id")
+    @JoinColumn(name = "author_id")
     private User author;
 
     @OneToOne(fetch = FetchType.LAZY)
