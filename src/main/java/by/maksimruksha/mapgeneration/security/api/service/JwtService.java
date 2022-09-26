@@ -1,6 +1,6 @@
 package by.maksimruksha.mapgeneration.security.api.service;
 
-import by.maksimruksha.mapgeneration.security.UserDetails;
+import org.springframework.security.core.userdetails.UserDetails;
 
 public interface JwtService {
     String generateToken(UserDetails userDetails);

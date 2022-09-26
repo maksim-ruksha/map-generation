@@ -1,9 +1,9 @@
 package by.maksimruksha.mapgeneration.security.service;
 
-import by.maksimruksha.mapgeneration.security.UserDetails;
 import by.maksimruksha.mapgeneration.security.api.service.JwtService;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -26,7 +26,7 @@ public class JwtServiceImpl implements JwtService {
 
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(userDetails.getName())
+                .setSubject(userDetails.getUsername())
                 .setExpiration(expirationDate)
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
@@ -48,7 +48,7 @@ public class JwtServiceImpl implements JwtService {
             String usernameFromToken = claims.getSubject();
             Date expirationDate = claims.getExpiration();
 
-            Boolean isUsernameValid = userDetails.getName().equals(usernameFromToken);
+            Boolean isUsernameValid = userDetails.getUsername().equals(usernameFromToken);
             Boolean isExpired = expirationDate.before(new Date());
 
             return isUsernameValid && !isExpired;
