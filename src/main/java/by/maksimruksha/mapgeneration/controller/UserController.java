@@ -2,6 +2,7 @@ package by.maksimruksha.mapgeneration.controller;
 
 import by.maksimruksha.mapgeneration.api.service.UserService;
 import by.maksimruksha.mapgeneration.dto.UserDto;
+import by.maksimruksha.mapgeneration.entities.User;
 import by.maksimruksha.mapgeneration.security.api.service.JwtService;
 import by.maksimruksha.mapgeneration.security.dto.LoginDto;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,20 @@ public class UserController {
             return ResponseEntity.ok(response);
         }
         return ResponseEntity.badRequest().body(userDto);
+    }
+
+    @GetMapping("/login")
+    public ResponseEntity<String> login(LoginDto loginDto) {
+        User user = mapper.map(loginDto, User.class);
+        if (userService.existsUserByName(user.getName())) {
+            if (!userService.checkPassword(user.getName(), user.getPassword())) {
+                return ResponseEntity.badRequest().body("Invalid password");
+            }
+            String token = jwtService.generateToken(user);
+            return ResponseEntity.ok(token);
+        }
+
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/token")
