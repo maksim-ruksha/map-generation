@@ -43,8 +43,8 @@ public class MapController {
         return null;
     }
 
-    @PostMapping("/publish")
-    public ResponseEntity<MapDto> publish(MapDto mapDto)
+    @PostMapping("/create")
+    public ResponseEntity<MapDto> create(MapDto mapDto)
     {
         MapDto response = mapService.create(mapDto);
         return ResponseEntity.ok(response);
