@@ -15,21 +15,22 @@ import java.io.ByteArrayOutputStream;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/map")
+@RequestMapping("/maps")
 public class MapController {
 
     private final MapService mapService;
     private final MapGenerationService mapGenerationService;
 
     @GetMapping(
-            value = "/generate/{seed}",
+            value = "/generate",
             produces = MediaType.IMAGE_PNG_VALUE
     )
-    public @ResponseBody byte[] generate(@PathVariable Long seed/*, String generator*/) {
+    public @ResponseBody byte[] generate(@RequestParam String seed) {
+        Long seedNumber = (long) seed.hashCode();
         MapDto map = new MapDto();
-        map.setSeed(seed);
+        map.setSeed(seedNumber);
 
-        BufferedImage image = mapGenerationService.generate(seed);
+        BufferedImage image = mapGenerationService.generate(seedNumber);
 
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -40,6 +41,13 @@ public class MapController {
             System.out.println(e.toString());
         }
         return null;
+    }
+
+    @PostMapping("/publish")
+    public ResponseEntity<MapDto> publish(MapDto mapDto)
+    {
+        MapDto response = mapService.create(mapDto);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
