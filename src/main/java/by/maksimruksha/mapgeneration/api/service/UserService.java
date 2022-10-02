@@ -13,6 +13,6 @@ public interface UserService {
     Page<UserDto> findAll(Pageable pageable);
     UserDto findById(Long userId);
     UserDto findByName(String name);
-
+    Boolean checkPassword(String name, String password);
     Boolean existsUserByName(String name);
 }

@@ -9,18 +9,21 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-
+    private final PasswordEncoder passwordEncoder;
     private final ModelMapper mapper;
 
     @Override
     public UserDto create(UserDto userDto) {
-        User response = userRepository.save(mapper.map(userDto, User.class));
+        User newUser = mapper.map(userDto, User.class);
+        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        User response = userRepository.save(newUser);
         return mapper.map(response, UserDto.class);
     }
 
@@ -62,6 +65,12 @@ public class UserServiceImpl implements UserService {
     public UserDto findByName(String name) {
         User response = userRepository.findUserByName(name);
         return mapper.map(response, UserDto.class);
+    }
+
+    @Override
+    public Boolean checkPassword(String name, String potentialPassword) {
+        User user = userRepository.findUserByName(name);
+        return passwordEncoder.matches(potentialPassword, user.getPassword());
     }
 
     @Override
