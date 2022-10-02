@@ -63,9 +63,4 @@ public class MapController {
         MapDto response = mapService.update(mapDto);
         return ResponseEntity.ok(response);
     }
-
-    /*public ResponseEntity<MapDto> like()
-    {
-
-    }*/
 }
