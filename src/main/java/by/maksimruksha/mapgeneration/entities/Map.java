@@ -17,18 +17,12 @@ public class Map {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "publication_date_time")
-    private ZonedDateTime publicationDateTime;
-
     @Column(name = "seed")
     private Long seed;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
     private User author;
-
-    @Column(name = "generator")
-    private String generatorName;
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "likes_ids")
@@ -37,10 +31,4 @@ public class Map {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "comments_ids")
     private List<Comment> comments;
-
-    @Column(name = "preview_link")
-    private String previewLink;
-
-    @Column(name = "full_link")
-    private String fullLink;
 }
