@@ -20,6 +20,12 @@ public class Map {
     @Column(name = "seed")
     private Long seed;
 
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "description")
+    private String description;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
     private User author;

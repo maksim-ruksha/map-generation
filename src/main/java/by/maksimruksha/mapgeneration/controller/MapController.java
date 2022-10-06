@@ -32,7 +32,7 @@ public class MapController {
             value = "/generate/{seed}",
             produces = MediaType.IMAGE_PNG_VALUE
     )
-    public @ResponseBody byte[] generate(@RequestParam String seed) {
+    public @ResponseBody byte[] generate(@PathVariable String seed) {
         Long seedNumber = (long) seed.hashCode();
         MapDto map = new MapDto();
         map.setSeed(seedNumber);
@@ -51,22 +51,19 @@ public class MapController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<MapDto> create(MapDto mapDto)
-    {
+    public ResponseEntity<MapDto> create(@RequestBody MapDto mapDto) {
         MapDto response = mapService.create(mapDto);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MapDto> read(@PathVariable Long id)
-    {
+    public ResponseEntity<MapDto> read(@PathVariable Long id) {
         MapDto mapDto = mapService.read(id);
         return ResponseEntity.ok(mapDto);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<MapDto> update(MapDto mapDto)
-    {
+    public ResponseEntity<MapDto> update(MapDto mapDto) {
         MapDto response = mapService.update(mapDto);
         return ResponseEntity.ok(response);
     }

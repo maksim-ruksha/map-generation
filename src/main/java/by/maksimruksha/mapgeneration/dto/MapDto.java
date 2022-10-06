@@ -10,7 +10,9 @@ import java.util.List;
 public class MapDto {
     private Long id;
     private Long seed;
-    private User author;
+    private String name;
+    private String description;
+    private UserDto author;
     private List<LikeDto> likes;
     private List<CommentDto> comments;
 }
