@@ -9,8 +9,6 @@ import by.maksimruksha.mapgeneration.security.dto.RegisterDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,7 +18,6 @@ public class UserController {
 
     private final UserService userService;
     private final JwtService jwtService;
-
 
     private final ModelMapper mapper;
 
@@ -53,23 +50,9 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/token")
-    public String token() {
-        LoginDto loginDto = new LoginDto();
-        loginDto.setName("amogus");
-        loginDto.setPassword("mega sus");
-
-        UserDetails userDetails = mapper.map(loginDto, UserDetails.class);
-        String token = jwtService.generateToken(userDetails);
-        return token;
-    }
-
-    @GetMapping("/validateToken/{token}")
-    public String validateToken(@PathVariable String token) {
-        LoginDto loginDto = new LoginDto();
-
-        User userDetails = mapper.map(loginDto, User.class);
-        Boolean isValid = jwtService.isValid(token, userDetails);
-        return isValid ? "Okay" : "Not okay";
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDto> read(@PathVariable Long id)
+    {
+        return ResponseEntity.ok(userService.read(id));
     }
 }

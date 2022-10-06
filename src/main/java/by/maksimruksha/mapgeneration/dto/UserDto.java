@@ -10,7 +10,6 @@ import java.util.Set;
 public class UserDto {
     private Long id;
     private String name;
-    private String password;
     private Set<Role> roles;
     private List<MapDto> maps;
 }
