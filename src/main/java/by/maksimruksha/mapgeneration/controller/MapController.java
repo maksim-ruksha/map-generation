@@ -5,7 +5,10 @@ import by.maksimruksha.mapgeneration.api.service.MapGenerationService;
 import by.maksimruksha.mapgeneration.api.service.MapService;
 import by.maksimruksha.mapgeneration.dto.MapDto;
 import by.maksimruksha.mapgeneration.util.SortHelper;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.io.Encoders;
 import lombok.RequiredArgsConstructor;
+import org.postgresql.shaded.com.ongres.scram.common.bouncycastle.base64.Base64;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,10 +36,16 @@ public class MapController {
             produces = MediaType.IMAGE_PNG_VALUE
     )
     public @ResponseBody byte[] generate(@PathVariable String seed) {
-        Long seedNumber = (long) seed.hashCode();
-        MapDto map = new MapDto();
-        map.setSeed(seedNumber);
-        BufferedImage image = mapGenerationService.generate(seedNumber);
+        BufferedImage image = mapGenerationService.generate(seed, 1);
+        return imageToBytesService.convert(image);
+    }
+
+    @GetMapping(
+            value = "/generate/hd/{seed}",
+            produces = MediaType.IMAGE_PNG_VALUE
+    )
+    public @ResponseBody byte[] generateHighQuality(@PathVariable String seed) {
+        BufferedImage image = mapGenerationService.generate(seed, 5);
         return imageToBytesService.convert(image);
     }
 
@@ -48,6 +57,24 @@ public class MapController {
         Pageable pageable = PageRequest.of(page, size, Sort.by(SortHelper.orderDirection(direction), sortField));
         Page<MapDto> maps = mapService.findAll(pageable);
         return ResponseEntity.ok(maps.getContent());
+    }
+
+    @GetMapping("/author")
+    public ResponseEntity<List<MapDto>> getAllByUser(@RequestParam Long userId,
+                                                     @RequestParam(required = false, defaultValue = "id") String sortField,
+                                                     @RequestParam(required = false, defaultValue = "0") Integer page,
+                                                     @RequestParam(required = false, defaultValue = "asc") String direction,
+                                                     @RequestParam(required = false, defaultValue = "10") Integer size)
+    {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(SortHelper.orderDirection(direction), sortField));
+        Page<MapDto> maps = mapService.findAllByAuthor(pageable, userId);
+        return ResponseEntity.ok(maps.getContent());
+    }
+
+    @GetMapping("/pages")
+    public Long getPagesCount(@RequestParam int pageSize) {
+        boolean isFull = mapService.countAll() % pageSize == 0;
+        return mapService.countAll() / pageSize + (isFull ? 0 : 1);
     }
 
     @PostMapping("/create")

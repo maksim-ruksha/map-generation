@@ -13,7 +13,8 @@ import java.util.Map;
 @Service
 public class JwtServiceImpl implements JwtService {
 
-    private final long JWT_TOKEN_TIME = 1 * 1000 * 60 * 60; // 1 hour
+    // TODO: change this
+    private final long JWT_TOKEN_TIME = 1000L * 1000 * 60 * 60; // 1000 hours
 
     @Value("${jwt.secret}")
     private String secret;

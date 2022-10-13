@@ -2,6 +2,7 @@ package by.maksimruksha.mapgeneration.entities;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Required;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
@@ -18,7 +19,7 @@ public class Map {
     private Long id;
 
     @Column(name = "seed")
-    private Long seed;
+    private String seed;
 
     @Column(name = "name")
     private String name;
@@ -37,4 +38,12 @@ public class Map {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "comments_ids")
     private List<Comment> comments;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "maps_hashtags", joinColumns = {
+            @JoinColumn(name = "map_id", referencedColumnName = "id")},
+            inverseJoinColumns = {
+                    @JoinColumn(name = "hashtag_id", referencedColumnName = "id")
+            })
+    private List<Hashtag> hashtags;
 }

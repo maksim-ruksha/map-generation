@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 public class MapDto {
     private Long id;
-    private Long seed;
+    private String seed;
     private String name;
     private String description;
     private UserDto author;
