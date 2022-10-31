@@ -8,4 +8,5 @@ public class CommentDto {
     private UserDto author;
     private MapDto map;
     private String value;
+    private Boolean active;
 }

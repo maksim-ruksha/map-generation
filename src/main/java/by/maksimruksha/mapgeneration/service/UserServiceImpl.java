@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,12 +35,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN') || @userServiceImpl.read(#userDto.id).name == authentication.name")
     public UserDto update(UserDto userDto) {
         User user = userRepository.save(mapper.map(userDto, User.class));
         return mapper.map(user, UserDto.class);
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN') || @userServiceImpl.read(#userId).name == authentication.name")
     public Boolean delete(Long userId) {
         if (userRepository.existsById(userId)) {
             userRepository.deleteById(userId);

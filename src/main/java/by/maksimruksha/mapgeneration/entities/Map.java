@@ -30,20 +30,4 @@ public class Map {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
     private User author;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "likes_ids")
-    private List<Like> likes;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comments_ids")
-    private List<Comment> comments;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "maps_hashtags", joinColumns = {
-            @JoinColumn(name = "map_id", referencedColumnName = "id")},
-            inverseJoinColumns = {
-                    @JoinColumn(name = "hashtag_id", referencedColumnName = "id")
-            })
-    private List<Hashtag> hashtags;
 }

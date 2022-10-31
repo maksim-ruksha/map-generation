@@ -5,10 +5,7 @@ import by.maksimruksha.mapgeneration.api.service.MapGenerationService;
 import by.maksimruksha.mapgeneration.api.service.MapService;
 import by.maksimruksha.mapgeneration.dto.MapDto;
 import by.maksimruksha.mapgeneration.util.SortHelper;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.io.Encoders;
 import lombok.RequiredArgsConstructor;
-import org.postgresql.shaded.com.ongres.scram.common.bouncycastle.base64.Base64;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +25,6 @@ public class MapController {
 
     private final MapService mapService;
     private final MapGenerationService mapGenerationService;
-
     private final ImageToBytesService imageToBytesService;
 
     @GetMapping(
@@ -45,7 +41,7 @@ public class MapController {
             produces = MediaType.IMAGE_PNG_VALUE
     )
     public @ResponseBody byte[] generateHighQuality(@PathVariable String seed) {
-        BufferedImage image = mapGenerationService.generate(seed, 5);
+        BufferedImage image = mapGenerationService.generate(seed, 4);
         return imageToBytesService.convert(image);
     }
 
@@ -72,9 +68,8 @@ public class MapController {
     }
 
     @GetMapping("/pages")
-    public Long getPagesCount(@RequestParam int pageSize) {
-        boolean isFull = mapService.countAll() % pageSize == 0;
-        return mapService.countAll() / pageSize + (isFull ? 0 : 1);
+    public Long getPagesCount(@RequestParam Long pageSize) {
+        return mapService.getPagesCount(pageSize);
     }
 
     @PostMapping("/create")

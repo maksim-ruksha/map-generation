@@ -8,9 +8,9 @@ public interface MapService {
     MapDto create(MapDto mapDto);
     MapDto read(Long id);
     MapDto update(MapDto mapDto);
-    Boolean delete(Long id);
+    Boolean delete(MapDto mapDto);
     Page<MapDto> findAll(Pageable pageable);
     Page<MapDto> findAllByAuthor(Pageable pageable, Long userId);
 
-    Long countAll();
+    Long getPagesCount(Long pageSize);
 }

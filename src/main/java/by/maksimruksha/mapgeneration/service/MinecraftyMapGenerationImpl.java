@@ -33,7 +33,7 @@ public class MinecraftyMapGenerationImpl implements MapGenerationService {
     // less weirder = more smooth
     private final int NORMAL_HEIGHT_OCTAVES = 3;
 
-    // less octaves = more smooth and staright rivers
+    // less octaves = more smooth and straight rivers
     private final int RIVERS_OCTAVES = 6;
 
     // controls index 0 (0 <= index 0 < NOISE_LEVEL_LOW_HEIGHT)
@@ -49,6 +49,8 @@ public class MinecraftyMapGenerationImpl implements MapGenerationService {
 
     // controls world ocean height
     private final float WATER_GLOBAL_HEIGHT = 0.0734f;
+
+    private final float RIVERS_GLOBAL_HEIGHT = WATER_GLOBAL_HEIGHT - 0.035f;
 
     // controls beach height
     private final float BEACH_GLOBAL_HEIGHT = WATER_GLOBAL_HEIGHT + 0.015f;
@@ -81,7 +83,7 @@ public class MinecraftyMapGenerationImpl implements MapGenerationService {
     private final float TEMPERATURE_SCALE = 0.125f;
 
     // controls thiccness of rivers
-    private final float RIVERS_THICKNESS = 0.01f;
+    private final float RIVERS_THICKNESS = 0.035f;
 
     // minimum size of image
     private final int MIN_IMAGE_SIZE = 256;
@@ -323,9 +325,10 @@ public class MinecraftyMapGenerationImpl implements MapGenerationService {
 
         // combine weird and normal variant according to weirdness factor
         float height = lerp(normalHeight, weirdHeight, cosine(getWeirdness(u, v)));
+
         // apply rivers factor
-        // cosines make transitions nicer
-        return lerp(height * height * height, 0, cosine(rivers));
+        // cosines makes transitions nicer
+        return lerp(height * height * height, RIVERS_GLOBAL_HEIGHT, cosine(rivers));
     }
 
     //sample temperature noise

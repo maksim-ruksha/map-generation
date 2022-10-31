@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -45,15 +46,17 @@ public class MapServiceImpl implements MapService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN') || @userServiceImpl.read(#mapDto.author.id).name == authentication.name")
     public MapDto update(MapDto mapDto) {
         Map map = mapRepository.save(mapper.map(mapDto, Map.class));
         return mapper.map(map, MapDto.class);
     }
 
     @Override
-    public Boolean delete(Long id) {
-        if (mapRepository.existsById(id)) {
-            mapRepository.deleteById(id);
+    @PreAuthorize("hasRole('ROLE_ADMIN') || @userServiceImpl.read(#mapDto.author.id).name == authentication.name")
+    public Boolean delete(MapDto mapDto) {
+        if (mapRepository.existsById(mapDto.getId())) {
+            mapRepository.deleteById(mapDto.getId());
             return true;
         }
         return false;
@@ -73,7 +76,9 @@ public class MapServiceImpl implements MapService {
     }
 
     @Override
-    public Long countAll() {
-        return mapRepository.count();
+    public Long getPagesCount(Long pageSize) {
+        Long mapsCount = mapRepository.count();
+        Boolean isFull = mapsCount % pageSize == 0;
+        return mapsCount / pageSize + (isFull ? 0 : 1);
     }
 }

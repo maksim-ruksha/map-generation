@@ -60,7 +60,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 }
             }
         }
-        logger.info("Authorization check ended.");
         filterChain.doFilter(request, response);
     }
 }

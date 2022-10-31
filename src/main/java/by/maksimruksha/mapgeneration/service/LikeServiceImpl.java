@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,41 +27,60 @@ public class LikeServiceImpl implements LikeService {
     private final ModelMapper mapper;
 
     @Override
-    public LikeDto create(LikeDto commentDto) {
-        Long userId = commentDto.getOwner().getId();
+    @PreAuthorize("hasRole('ROLE_ADMIN') || @userServiceImpl.read(#likeDto.owner.id).name == authentication.name")
+    public LikeDto create(LikeDto likeDto) {
+        Long userId = likeDto.getOwner().getId();
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User " + userId + " not found."));
 
-        Long mapId = commentDto.getMap().getId();
+        Long mapId = likeDto.getMap().getId();
         Map map = mapRepository.findById(mapId).orElseThrow(() -> new ResourceNotFoundException("Map " + mapId + " not found."));
+        if (!likeRepository.existsByMapAndOwner(map, user)) {
+            Like like = mapper.map(likeDto, Like.class);
 
-        Like comment = mapper.map(commentDto, Like.class);
+            like.setOwner(user);
+            like.setMap(map);
 
-        comment.setOwner(user);
-        comment.setMap(map);
-
-        Like response = likeRepository.save(comment);
-        return mapper.map(response, LikeDto.class);
+            Like response = likeRepository.save(like);
+            return mapper.map(response, LikeDto.class);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public LikeDto read(Long id) {
-        Like comment = likeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Like " + id + " not found."));
-        return mapper.map(comment, LikeDto.class);
+        Like like = likeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Like " + id + " not found."));
+        return mapper.map(like, LikeDto.class);
     }
 
     @Override
-    public LikeDto update(LikeDto commentDto) {
-        Like comment = likeRepository.save(mapper.map(commentDto, Like.class));
-        return mapper.map(comment, LikeDto.class);
+    @PreAuthorize("hasRole('ROLE_ADMIN') || @userServiceImpl.read(#likeDto.owner.id).name == authentication.name")
+    public LikeDto update(LikeDto likeDto) {
+        Like like = likeRepository.save(mapper.map(likeDto, Like.class));
+        return mapper.map(like, LikeDto.class);
     }
 
     @Override
-    public Boolean delete(Long id) {
-        if (likeRepository.existsById(id)) {
-            likeRepository.deleteById(id);
+    @PreAuthorize("hasRole('ROLE_ADMIN') || @userServiceImpl.read(#userId).name == authentication.name")
+    public Boolean delete(Long userId, Long mapId) {
+        if(userLikeExists(userId, mapId)) {
+            User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User " + userId + " not found."));
+            Map map = mapRepository.findById(mapId).orElseThrow(() -> new ResourceNotFoundException("Map " + mapId + " not found."));
+
+            Like like = likeRepository.findByMapAndOwner(map, user);
+            likeRepository.delete(like);
+
             return true;
         }
         return false;
+    }
+
+    @Override
+    public Boolean userLikeExists(Long userId, Long mapId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User " + userId + " not found."));
+        Map map = mapRepository.findById(mapId).orElseThrow(() -> new ResourceNotFoundException("Map " + mapId + " not found."));
+
+        return likeRepository.existsByMapAndOwner(map, user);
     }
 
     @Override
@@ -71,14 +91,16 @@ public class LikeServiceImpl implements LikeService {
     }
 
     @Override
-    public Page<LikeDto> findAllByMap(Pageable pageable, Long mapId) {
+    public Page<LikeDto> findAllByMap(Pageable pageable, Long likeId) {
         return likeRepository
-                .findAllByMap(pageable, mapId)
+                .findAllByMap(pageable, likeId)
                 .map(comment -> mapper.map(comment, LikeDto.class));
     }
 
     @Override
     public Long countAllByMap(Long mapId) {
-        return likeRepository.countAllByMap(mapId);
+        Map dummyMap = new Map();
+        dummyMap.setId(mapId);
+        return likeRepository.countAllByMap(dummyMap);
     }
 }

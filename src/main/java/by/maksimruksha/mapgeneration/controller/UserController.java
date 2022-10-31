@@ -51,12 +51,12 @@ public class UserController {
     }
 
     @GetMapping("/validate")
-    public Boolean validateToken(@RequestParam String token, @RequestParam String userName)
+    public ResponseEntity<Boolean> validateToken(@RequestParam String token, @RequestParam String userName)
     {
         User user = new User();
         user.setName(userName);
 
-        return jwtService.isValid(token, user);
+        return ResponseEntity.ok(jwtService.isValid(token, user));
     }
 
     @GetMapping("/name/{name}")

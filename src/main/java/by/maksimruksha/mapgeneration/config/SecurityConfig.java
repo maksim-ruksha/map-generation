@@ -53,6 +53,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         security.authorizeRequests()
                 .antMatchers("/maps/create").authenticated()
+                .antMatchers("/likes/add").authenticated()
+                .antMatchers("/likes/delete").authenticated()
+                .antMatchers("/comments/send").authenticated()
                 .antMatchers("/users/create").anonymous()
                 .anyRequest().permitAll();
 
