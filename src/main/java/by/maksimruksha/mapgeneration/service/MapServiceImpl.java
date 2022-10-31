@@ -66,8 +66,14 @@ public class MapServiceImpl implements MapService {
 
     @Override
     public Page<MapDto> findAllByAuthor(Pageable pageable, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User " + userId + " not found."));
         return mapRepository
-                .findAllByAuthor(pageable, userId)
+                .findAllByAuthor(pageable, user)
                 .map(map -> mapper.map(map, MapDto.class));
+    }
+
+    @Override
+    public Long countAll() {
+        return mapRepository.count();
     }
 }

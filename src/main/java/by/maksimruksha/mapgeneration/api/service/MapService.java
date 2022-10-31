@@ -11,4 +11,6 @@ public interface MapService {
     Boolean delete(Long id);
     Page<MapDto> findAll(Pageable pageable);
     Page<MapDto> findAllByAuthor(Pageable pageable, Long userId);
+
+    Long countAll();
 }

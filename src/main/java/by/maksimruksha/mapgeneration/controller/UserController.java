@@ -9,6 +9,7 @@ import by.maksimruksha.mapgeneration.security.dto.RegisterDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -36,7 +37,6 @@ public class UserController {
         }
     }
 
-
     @GetMapping("/login")
     public ResponseEntity<String> login(LoginDto loginDto) {
         User user = mapper.map(loginDto, User.class);
@@ -50,7 +50,22 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/validate")
+    public Boolean validateToken(@RequestParam String token, @RequestParam String userName)
+    {
+        User user = new User();
+        user.setName(userName);
+
+        return jwtService.isValid(token, user);
+    }
+
+    @GetMapping("/name/{name}")
+    public ResponseEntity<UserDto> readByName(@PathVariable String name)
+    {
+        return ResponseEntity.ok(userService.findByName(name));
+    }
+
+    @GetMapping("/id/{id}")
     public ResponseEntity<UserDto> read(@PathVariable Long id)
     {
         return ResponseEntity.ok(userService.read(id));
