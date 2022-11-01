@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>by.maksimruksha.mapgeneration</groupId>
     <artifactId>MapGeneration</artifactId>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
     <properties>
         <maven.compiler.source>18</maven.compiler.source>
@@ -93,5 +93,22 @@
     </dependencies>
     <build>
         <finalName>MapGeneration</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>by.maksimruksha.mapgeneration.Application</mainClass>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 </project>

@@ -1,0 +1,29 @@
+version: '3.5'
+
+services:
+  backend:
+    image: 'spring-boot-backend:latest'
+    build:
+      context: ./
+    container_name: spring-boot-backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+    environment:
+      POSTGRES_HOST: database
+      restart: always
+
+  database:
+    image: 'postgres:latest'
+    restart: always
+    container_name: postgres
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data/pgdata
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: database
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
